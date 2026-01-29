@@ -38,7 +38,7 @@
       margin: 0 auto;
     }
 
-    /* ✅ keep header/subhead centered to the CANVAS column */
+    
     .title,
     .subhead{
       width: var(--canvas);
@@ -65,7 +65,7 @@
       opacity: 0.9;
     }
 
-    /* ✅ link styling ONLY for the link */
+    
     .subhead a{
       color: var(--green-2);
       font-weight: 600;
@@ -274,7 +274,7 @@
   let snake, dir, nextDir, food, score, alive, loopId;
   let started = false;
 
-  // ✅ start-screen animation state
+  
   let startAnimId = null;
   const startT0 = performance.now();
 
@@ -388,7 +388,7 @@
     draw(true);
   }
 
-  // ✅ animated start screen loop
+  
   function startScreenLoop(t){
     if (started) return;
     draw(false, t);
@@ -397,7 +397,7 @@
 
   function draw(showGameOver = false, t = performance.now()) {
 
-    // ✅ START SCREEN: black + text + floating snivy (no snake/grass behind it)
+    
     if (!started) {
       ctx.fillStyle = "#000";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -424,7 +424,7 @@
       return;
     }
 
-    // NORMAL GAME
+    
     ctx.fillStyle = "#FFFFFF";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -508,7 +508,7 @@
     if (k === "arrowright" || k === "d") setDirection(1, 0);
   });
 
-  // init: set up state, then animate start screen
+  
   reset(false);
   startAnimId = requestAnimationFrame(startScreenLoop);
 })();
