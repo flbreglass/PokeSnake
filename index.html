@@ -14,10 +14,11 @@
       --green-2:#165412;
       --green-3:#1f7319;
 
-      --canvas: 900px;
       --hud: 230px;
       --gap: 18px;
-      --gameW: calc(var(--canvas) + var(--hud) + var(--gap));
+
+      /* Responsive canvas display size (CSS only). Internal canvas stays 900x900. */
+      --canvasW: min(900px, calc(100vw - 40px));
     }
 
     body{
@@ -31,19 +32,23 @@
       background: #ffffff;
     }
 
-    .wrap{ text-align:center; }
+    .wrap{
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      text-align:center;
+    }
 
     .gameShell{
-      width: var(--gameW);
+      width: calc(var(--canvasW) + var(--hud) + var(--gap));
       margin: 0 auto;
     }
 
-    
+    /* Center header/subhead to CANVAS column */
     .title,
     .subhead{
-      width: var(--canvas);
-      margin-left: 0;
-      margin-right: auto;
+      width: var(--canvasW);
+      margin: 0 auto;
       text-align: center;
     }
 
@@ -51,7 +56,6 @@
       color: var(--green-1);
       font-size: 42px;
       font-weight: 800;
-      margin-top: 0;
       margin-bottom: 4px;
       letter-spacing: 0.2px;
     }
@@ -60,12 +64,10 @@
       color: var(--green-2);
       font-size: 18px;
       font-weight: 500;
-      margin-top: 0;
       margin-bottom: 14px;
       opacity: 0.9;
     }
 
-    
     .subhead a{
       color: var(--green-2);
       font-weight: 600;
@@ -79,15 +81,19 @@
       border-bottom-color: var(--green-1);
     }
 
+    /* Center the GAME block */
     .gameRow{
       display: grid;
-      grid-template-columns: var(--canvas) var(--hud);
+      grid-template-columns: var(--canvasW) var(--hud);
       gap: var(--gap);
       align-items: start;
-      justify-content: start;
+      justify-content: center; /* important */
     }
 
+    /* Internal resolution stays 900x900, but displayed size is responsive */
     canvas{
+      width: var(--canvasW);
+      height: var(--canvasW);
       border: 5px solid var(--green-2);
       image-rendering: auto;
       display:block;
@@ -100,7 +106,8 @@
       font-weight: 700;
       user-select: none;
       padding-top: 8px;
-      margin-left: 10px;
+      padding-left: 10px; /* scootch right */
+      box-sizing: border-box;
     }
 
     .stat{ margin-bottom: 14px; }
@@ -167,25 +174,26 @@
       transform: translateY(-1px);
     }
 
-    @media (max-width: 1200px){
-      :root{ --gameW: var(--canvas); }
-      .gameShell{ width: var(--canvas); }
+    /* Stack HUD under canvas */
+    @media (max-width: 1100px){
+      .gameShell{
+        width: var(--canvasW);
+      }
+
       .gameRow{
         grid-template-columns: 1fr;
         justify-items: center;
       }
+
       .hudRight{
         width: min(520px, 92vw);
         padding-top: 14px;
+        padding-left: 0;
         text-align: center;
       }
+
       .valueRow{ justify-content: center; }
       .label{ text-align: center; }
-
-      .title, .subhead{
-        margin-left: auto;
-        margin-right: auto;
-      }
     }
   </style>
 </head>
@@ -274,7 +282,6 @@
   let snake, dir, nextDir, food, score, alive, loopId;
   let started = false;
 
-  
   let startAnimId = null;
   const startT0 = performance.now();
 
@@ -388,7 +395,6 @@
     draw(true);
   }
 
-  
   function startScreenLoop(t){
     if (started) return;
     draw(false, t);
@@ -396,8 +402,6 @@
   }
 
   function draw(showGameOver = false, t = performance.now()) {
-
-    
     if (!started) {
       ctx.fillStyle = "#000";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -424,7 +428,6 @@
       return;
     }
 
-    
     ctx.fillStyle = "#FFFFFF";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -508,7 +511,6 @@
     if (k === "arrowright" || k === "d") setDirection(1, 0);
   });
 
-  
   reset(false);
   startAnimId = requestAnimationFrame(startScreenLoop);
 })();
